@@ -8,7 +8,7 @@
     "astring": "^1.8.3",
     "debug": "^4.3.4",
     "lodash": "^4.17.21",
-    "pg-formatter": "^1.3.0",
+    "sql-formatter": "^12.0.5",
     "sql-parse": "^0.1.5"
   },
   "description": "SQL linting rules for ESLint.",
@@ -20,6 +20,8 @@
     "@types/node": "^18.11.9",
     "eslint": "^8.27.0",
     "eslint-config-canonical": "37.0.3",
+    "eslint-import-resolver-typescript": "^3.5.3",
+    "eslint-plugin-import": "^2.26.0",
     "gitdown": "^3.1.5",
     "glob": "^8.0.3",
     "mocha": "^10.1.0",
@@ -37,7 +39,7 @@
   ],
   "license": "BSD-3-Clause",
   "main": "./dist/src/index.js",
-  "name": "eslint-plugin-sql",
+  "name": "@clap404/eslint-plugin-sql",
   "peerDependencies": {
     "eslint": ">=8.1.0"
   },
@@ -46,7 +48,7 @@
     "url": "https://github.com/gajus/eslint-plugin-sql"
   },
   "scripts": {
-    "build": "npm run documentation && tsc",
+    "build": "tsc",
     "documentation": "gitdown ./.README/README.md --output-file ./README.md && npm run documentation-add-assertions",
     "documentation-add-assertions": "tsx ./bin/readmeAssertions",
     "lint": "eslint ./src ./test && tsc --noEmit",

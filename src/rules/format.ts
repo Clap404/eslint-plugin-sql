@@ -1,9 +1,6 @@
-import {
-  generate,
-} from 'astring';
-import {
-  format,
-} from 'pg-formatter';
+import { generate } from 'astring';
+import { format } from 'sql-formatter';
+
 import isSqlQuery from '../utilities/isSqlQuery';
 
 const create = (context) => {
@@ -15,10 +12,14 @@ const create = (context) => {
   const ignoreInline = pluginOptions.ignoreInline !== false;
   const ignoreTagless = pluginOptions.ignoreTagless !== false;
   const ignoreStartWithNewLine = pluginOptions.ignoreStartWithNewLine !== false;
+  const matchOuterIndentation = pluginOptions.matchOuterIndentation !== false;
 
   return {
-    TemplateLiteral (node) {
-      const tagName = node.parent.tag?.name ?? node.parent.tag?.object?.name ?? node.parent.tag?.callee?.object?.name;
+    TemplateLiteral(node) {
+      const tagName =
+        node.parent.tag?.name ??
+        node.parent.tag?.object?.name ??
+        node.parent.tag?.callee?.object?.name;
 
       const sqlTagIsPresent = tagName === 'sql';
 
@@ -30,7 +31,7 @@ const create = (context) => {
         return;
       }
 
-      const magic = '"gajus-eslint-plugin-sql"';
+      const magic = '"clap-eslint-plugin-sql"';
 
       const literal = node.quasis
         .map((quasi) => {
@@ -46,10 +47,37 @@ const create = (context) => {
         return;
       }
 
-      let formatted = format(literal, context.options[1]);
+      let formatted = format(literal.trim(), context.options[1]);
 
-      if (ignoreStartWithNewLine && literal.startsWith('\n') && !formatted.startsWith('\n')) {
+      if (
+        ignoreStartWithNewLine &&
+        literal.startsWith('\n') &&
+        !formatted.startsWith('\n')
+      ) {
         formatted = '\n' + formatted;
+      }
+
+      if (matchOuterIndentation) {
+        const sourceCode = context.getSourceCode();
+        const tagLoc = sourceCode.getLocFromIndex(node.parent.tag.range[0]);
+        const tagLine = sourceCode.lines[tagLoc.line - 1];
+        let spaces = 0;
+        while (tagLine[spaces] === ' ') {
+          spaces++;
+        }
+
+        const formattedLines = formatted.split('\n');
+        formatted = formattedLines
+          .map((line, i) => {
+            if (i === 0) {
+              return line;
+            } else if (i === formattedLines.length - 1) {
+              return ' '.repeat(spaces) + line;
+            } else {
+              return ' '.repeat(spaces + 2) + line;
+            }
+          })
+          .join('\n');
       }
 
       if (formatted !== literal) {
@@ -61,15 +89,21 @@ const create = (context) => {
             let index = 0;
 
             while (index <= expressionCount - 1) {
-              final = final.replace(magic, '${' + generate(node.expressions[index]) + '}');
+              final = final.replace(
+                magic,
+                '${' + generate(node.expressions[index]) + '}',
+              );
 
               index++;
             }
 
-            return fixer.replaceTextRange([
-              node.quasis[0].range[0],
-              node.quasis[node.quasis.length - 1].range[1],
-            ], '`\n' + final + '`');
+            return fixer.replaceTextRange(
+              [
+                node.quasis[0].range[0],
+                node.quasis[node.quasis.length - 1].range[1],
+              ],
+              '`\n' + final + '`',
+            );
           },
           message: 'Format the query',
           node,
@@ -83,7 +117,8 @@ export = {
   create,
   meta: {
     docs: {
-      description: 'Matches queries in template literals. Warns when query formatting does not match the configured format (see Options).',
+      description:
+        'Matches queries in template literals. Warns when query formatting does not match the configured format (see Options).',
       url: 'https://github.com/gajus/eslint-plugin-sql#eslint-plugin-sql-rules-format',
     },
     fixable: 'code',
@@ -107,40 +142,84 @@ export = {
             default: true,
             type: 'boolean',
           },
+          matchOuterIndentation: {
+            default: true,
+            type: 'boolean',
+          },
         },
         type: 'object',
       },
       {
         additionalProperties: false,
         properties: {
-          anonymize: {
-            default: false,
-            type: 'boolean',
-          },
-          commaBreak: {
-            default: false,
-            type: 'boolean',
-          },
-          functionCase: {
-            default: 'lowercase',
+          language: {
+            default: 'sql',
             type: 'string',
+            enum: [
+              'sql',
+              'bigquery',
+              'db2',
+              'hive',
+              'mariadb',
+              'mysql',
+              'n1ql',
+              'plsql',
+              'postgresql',
+              'redshift',
+              'singlestoredb',
+              'snowflake',
+              'spark',
+              'sqlite',
+              'transactsql',
+              'tsql',
+              'trino',
+            ],
           },
-          keywordsCase: {
-            default: 'lowercase',
-            type: 'string',
-          },
-          noRcFile: {
-            default: false,
-            type: 'boolean',
-          },
-          spaces: {
+          tabWidth: {
+            default: 2,
             type: 'number',
           },
-          stripComments: {
+          useTabs: {
             default: false,
             type: 'boolean',
           },
-          tabs: {
+          keywordCase: {
+            default: 'preserve',
+            type: 'string',
+            enum: ['preserve', 'upper', 'lower'],
+          },
+          indentStyle: {
+            default: 'standard',
+            type: 'string',
+            enum: ['standard', 'tabularLeft', 'tabularRight'],
+          },
+          logicalOperatorNewline: {
+            default: 'before',
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          tabulateAlias: {
+            default: false,
+            type: 'boolean',
+          },
+          commaPosition: {
+            default: 'after',
+            type: 'string',
+            enum: ['after', 'before', 'tabular'],
+          },
+          expressionWidth: {
+            default: 50,
+            type: 'number',
+          },
+          linesBetweenQueries: {
+            default: 1,
+            type: 'number',
+          },
+          denseOperators: {
+            default: false,
+            type: 'boolean',
+          },
+          newlineBeforeSemicolon: {
             default: false,
             type: 'boolean',
           },
