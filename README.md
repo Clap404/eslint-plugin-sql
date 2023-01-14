@@ -104,14 +104,16 @@ This rule is used to format the queries using [pg-formatter](https://github.com/
 
 The first option is an object with the following configuration.
 
-|configuration|format|default|description|
-|---|---|---|---|
-|`ignoreExpressions`|boolean|`false`|Does not format template literals that contain expressions.|
-|`ignoreInline`|boolean|`true`|Does not format queries that are written on a single line.|
-|`ignoreTagless`|boolean|`true`|Does not format queries that are written without using `sql` tag.|
-|`ignoreStartWithNewLine`|boolean|`true`|Does not remove `\n` at the beginning of queries.|
+| configuration       |format|default| description                                                       |
+|---------------------|---|---|-------------------------------------------------------------------|
+| `ignoreExpressions` |boolean|`false`| Does not format template literals that contain expressions.       |
+| `ignoreInline`      |boolean|`true`| Does not format queries that are written on a single line.        |
+| `ignoreTagless`     |boolean|`true`| Does not format queries that are written without using `sql` tag. |
+| `startWithNewLine`  |boolean|`true`| Always start a sql template on a new line.                        |
+| `matchOuterIndentation`  |boolean|`true`| Indent the sql template from the same leven as enclosing code.    |
 
-The second option is an object with the [`pg-formatter` configuration](https://github.com/gajus/pg-formatter#configuration).
+
+The second option is an object with the [`sql-formatter` configuration](https://github.com/sql-formatter-org/sql-formatter#configuration-options).
 
 
 

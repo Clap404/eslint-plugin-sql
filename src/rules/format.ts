@@ -11,7 +11,7 @@ const create = (context) => {
   const ignoreExpressions = pluginOptions.ignoreExpressions === true;
   const ignoreInline = pluginOptions.ignoreInline !== false;
   const ignoreTagless = pluginOptions.ignoreTagless !== false;
-  const ignoreStartWithNewLine = pluginOptions.ignoreStartWithNewLine !== false;
+  const startWithNewLine = pluginOptions.startWithNewLine !== false;
   const matchOuterIndentation = pluginOptions.matchOuterIndentation !== false;
 
   return {
@@ -47,15 +47,7 @@ const create = (context) => {
         return;
       }
 
-      let formatted = format(literal.trim(), context.options[1]);
-
-      if (
-        ignoreStartWithNewLine &&
-        literal.startsWith('\n') &&
-        !formatted.startsWith('\n')
-      ) {
-        formatted = '\n' + formatted;
-      }
+      let formatted = format(literal, context.options[1]);
 
       if (matchOuterIndentation) {
         const sourceCode = context.getSourceCode();
@@ -69,15 +61,16 @@ const create = (context) => {
         const formattedLines = formatted.split('\n');
         formatted = formattedLines
           .map((line, i) => {
-            if (i === 0) {
-              return line;
-            } else if (i === formattedLines.length - 1) {
-              return ' '.repeat(spaces) + line;
-            } else {
-              return ' '.repeat(spaces + 2) + line;
-            }
+            return ' '.repeat(spaces) + line;
           })
           .join('\n');
+      }
+
+      if (
+        // by default, sql-formatter trims the new line at the beginning of the query
+        startWithNewLine
+      ) {
+        formatted = '\n' + formatted.trim();
       }
 
       if (formatted !== literal) {
@@ -102,7 +95,7 @@ const create = (context) => {
                 node.quasis[0].range[0],
                 node.quasis[node.quasis.length - 1].range[1],
               ],
-              '`\n' + final + '`',
+              '`' + final + '`',
             );
           },
           message: 'Format the query',
@@ -134,7 +127,7 @@ export = {
             default: true,
             type: 'boolean',
           },
-          ignoreStartWithNewLine: {
+          startWithNewLine: {
             default: true,
             type: 'boolean',
           },
