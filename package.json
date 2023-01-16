@@ -45,7 +45,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gajus/eslint-plugin-sql"
+    "url": "https://github.com/clap404/eslint-plugin-sql"
   },
   "scripts": {
     "build": "npm run documentation && tsc",
@@ -54,7 +54,7 @@
     "lint": "eslint ./src ./test && tsc --noEmit",
     "test": "mocha --require tsx test/**/*"
   },
-  "version": "0.0.1-alpha.2",
+  "version": "0.0.1-alpha.3",
   "contributors": [
     {
       "email": "gajus@gajus.com",
