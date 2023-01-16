@@ -54,5 +54,12 @@
     "lint": "eslint ./src ./test && tsc --noEmit",
     "test": "mocha --require tsx test/**/*"
   },
-  "version": "1.0.1"
+  "version": "0.0.1-alpha.1",
+  "contributors": [
+    {
+      "email": "gajus@gajus.com",
+      "name": "Gajus Kuizinas",
+      "url": "http://gajus.com"
+    }
+  ]
 }

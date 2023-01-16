@@ -111,8 +111,8 @@ export = {
   meta: {
     docs: {
       description:
-        'Matches queries in template literals. Warns when query formatting does not match the configured format (see Options).',
-      url: 'https://github.com/gajus/eslint-plugin-sql#eslint-plugin-sql-rules-format',
+        'Matches queries in template literals. Warns when query formatting does not match the configured format and fixes the formatting.',
+      url: 'https://github.com/Clap404/eslint-plugin-sql#eslint-plugin-sql-rules-format',
     },
     fixable: 'code',
     schema: [
