@@ -33,7 +33,7 @@ SQL linting rules for ESLint.
 
 ```sh
 npm install eslint --save-dev
-npm install eslint-plugin-sql --save-dev
+npm install @clap404/eslint-plugin-sql --save-dev
 ```
 
 <a name="user-content-eslint-plugin-sql-configuration"></a>
