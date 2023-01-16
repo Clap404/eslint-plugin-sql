@@ -1,8 +1,8 @@
 {
   "author": {
-    "email": "gajus@gajus.com",
-    "name": "Gajus Kuizinas",
-    "url": "http://gajus.com"
+    "email": "clap404@gmail.com",
+    "name": "clap404",
+    "url": "http://github.com/clap404"
   },
   "dependencies": {
     "astring": "^1.8.3",
@@ -54,12 +54,13 @@
     "lint": "eslint ./src ./test && tsc --noEmit",
     "test": "mocha --require tsx test/**/*"
   },
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
   "contributors": [
     {
       "email": "gajus@gajus.com",
       "name": "Gajus Kuizinas",
       "url": "http://gajus.com"
     }
-  ]
+  ],
+  "packageManager": "yarn@3.3.1"
 }
