@@ -63,11 +63,11 @@ const create = (context) => {
           .join('\n');
       }
 
+      // by default, sql-formatter trims the new line at the beginning of the query
       if (
-        // by default, sql-formatter trims the new line at the beginning of the query
         startWithNewLine
       ) {
-        formatted = '\n' + formatted.trim();
+        formatted = '\n' + formatted;
       }
 
       if (formatted !== literal) {
