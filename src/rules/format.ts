@@ -53,14 +53,11 @@ const create = (context) => {
         const sourceCode = context.getSourceCode();
         const tagLoc = sourceCode.getLocFromIndex(node.parent.tag.range[0]);
         const tagLine = sourceCode.lines[tagLoc.line - 1];
-        let spaces = 0;
-        while (tagLine[spaces] === ' ') {
-          spaces++;
-        }
+        const spaces = tagLine.match(/^ */)[0].length;
 
         const formattedLines = formatted.split('\n');
         formatted = formattedLines
-          .map((line, i) => {
+          .map((line) => {
             return ' '.repeat(spaces) + line;
           })
           .join('\n');

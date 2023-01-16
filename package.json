@@ -13,19 +13,16 @@
   },
   "description": "SQL linting rules for ESLint.",
   "devDependencies": {
-    "@semantic-release/commit-analyzer": "^9.0.2",
-    "@semantic-release/github": "^8.0.6",
-    "@semantic-release/npm": "^9.0.1",
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^5.48.1",
+    "@typescript-eslint/parser": "^5.48.1",
     "eslint": "^8.27.0",
-    "eslint-config-canonical": "37.0.3",
     "eslint-import-resolver-typescript": "^3.5.3",
     "eslint-plugin-import": "^2.26.0",
-    "gitdown": "^3.1.5",
-    "glob": "^8.0.3",
+    "eslint-plugin-prettier": "^4.2.1",
     "mocha": "^10.1.0",
-    "semantic-release": "^19.0.5",
+    "rimraf": "^4.0.7",
     "tsx": "^3.12.1",
     "typescript": "^4.9.3"
   },
@@ -48,10 +45,10 @@
     "url": "https://github.com/clap404/eslint-plugin-sql"
   },
   "scripts": {
-    "build": "npm run documentation && tsc",
-    "documentation": "gitdown ./.README/README.md --output-file ./README.md && npm run documentation-add-assertions",
-    "documentation-add-assertions": "tsx ./bin/readmeAssertions",
+    "clean": "rimraf ./dist",
+    "build": "tsc",
     "lint": "eslint ./src ./test && tsc --noEmit",
+    "lint:fix": "eslint --fix ./src ./test && tsc --noEmit",
     "test": "mocha --require tsx test/**/*"
   },
   "version": "0.0.1-alpha.4",
