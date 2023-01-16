@@ -2,13 +2,15 @@
 <a name="eslint-plugin-sql"></a>
 # eslint-plugin-sql
 
-[![NPM version](http://img.shields.io/npm/v/eslint-plugin-sql.svg?style=flat-square)](https://www.npmjs.org/package/eslint-plugin-sql)
-[![Canonical Code Style](https://img.shields.io/badge/code%20style-canonical-blue.svg?style=flat-square)](https://github.com/gajus/canonical)
-[![Twitter Follow](https://img.shields.io/twitter/follow/kuizinas.svg?style=social&label=Follow)](https://twitter.com/kuizinas)
+This is a fork I made to support [sql-formatter](https://github.com/sql-formatter-org/sql-formatter)
+as a backend instead of [pg-formatter](https://github.com/gajus/pg-formatter).
+The rationale is that this way, this plugin supports more sql dialects, and there is more flexibility with the formatting.
+
+forked from [eslint-plugin-sql](https://github.com/gajus/eslint-plugin-sql) by [@kuizinas](https://twitter.com/kuizinas)
 
 SQL linting rules for ESLint.
 
-> In its current form, the plugin has been designed and tested to work with Postgres codebase.
+> This plugin is currently alpha and *untested*. Do not use for anything critical !
 
 * [eslint-plugin-sql](#user-content-eslint-plugin-sql)
     * [Installation](#user-content-eslint-plugin-sql-installation)
@@ -25,13 +27,13 @@ SQL linting rules for ESLint.
 ## Installation
 
 1. Install [ESLint](https://www.github.com/eslint/eslint).
-1. Install [`eslint-plugin-sql`](https://github.com/gajus/eslint-plugin-sql) plugin.
+1. Install [`eslint-plugin-sql`](https://github.com/Clap404/eslint-plugin-sql) plugin.
 
 <!-- -->
 
 ```sh
 npm install eslint --save-dev
-npm install eslint-plugin-sql --save-dev
+npm install @clap404/eslint-plugin-sql --save-dev
 ```
 
 <a name="user-content-eslint-plugin-sql-configuration"></a>
@@ -43,29 +45,23 @@ npm install eslint-plugin-sql --save-dev
 
 <!-- -->
 
-```json
-{
-  "plugins": [
-    "sql"
-  ],
-  "rules": {
-    "sql/format": [
-      2,
-      {
-        "ignoreExpressions": false,
-        "ignoreInline": true,
-        "ignoreTagless": true
-      }
-    ],
-    "sql/no-unsafe-query": [
-      2,
-      {
-        "allowLiteral": false
-      }
-    ]
-  }
-}
-
+```yaml
+plugins:
+    - '@clap404/sql'
+rules:
+    '@clap404/sql/format':
+        - error
+        - ignoreExpressions: false
+          ignoreInline: true
+          ignoreTagless: true
+          startWithNewLine: true
+          matchOuterIndentation: true
+        - language: postgresql
+          keywordCase: lower
+          indentStyle: tabularLeft
+    '@clap404/sql/no-unsafe-query':
+       - error
+       - allowLiteral: false
 ```
 
 <a name="user-content-eslint-plugin-sql-settings"></a>
@@ -80,7 +76,7 @@ A regex used to ignore placeholders or other fragments of the query that'd make 
 
 If you are using `?` placeholders in your queries, you must ignore `\?` pattern as otherwise the string is not going to be recognized as a valid SQL query.
 
-This configuration is relevant for `sql/no-unsafe-query` to match queries containing placeholders as well as for `sql/format` when used with `{ignoreTagless: false}` configuration.
+This configuration is relevant for `@clap404/sql/no-unsafe-query` to match queries containing placeholders as well as for `@clap404/sql/format` when used with `{ignoreTagless: false}` configuration.
 
 <a name="user-content-eslint-plugin-sql-rules"></a>
 <a name="eslint-plugin-sql-rules"></a>
@@ -96,7 +92,7 @@ _The `--fix` option on the command line automatically fixes problems reported by
 
 Matches queries in template literals. Warns when query formatting does not match the configured format (see Options).
 
-This rule is used to format the queries using [pg-formatter](https://github.com/gajus/pg-formatter).
+This rule is used to format the queries using [sql-formatter](https://github.com/sql-formatter-org/sql-formatter).
 
 <a name="user-content-eslint-plugin-sql-rules-format-options"></a>
 <a name="eslint-plugin-sql-rules-format-options"></a>
@@ -104,16 +100,20 @@ This rule is used to format the queries using [pg-formatter](https://github.com/
 
 The first option is an object with the following configuration.
 
-|configuration|format|default|description|
-|---|---|---|---|
-|`ignoreExpressions`|boolean|`false`|Does not format template literals that contain expressions.|
-|`ignoreInline`|boolean|`true`|Does not format queries that are written on a single line.|
-|`ignoreTagless`|boolean|`true`|Does not format queries that are written without using `sql` tag.|
-|`ignoreStartWithNewLine`|boolean|`true`|Does not remove `\n` at the beginning of queries.|
+| configuration       | format  |default| description                                                       |
+|---------------------|---------|--|-------------------------------------------------------------------|
+| `ignoreExpressions` | boolean |`false`| Does not format template literals that contain expressions.       |
+| `ignoreInline`      | boolean |`true`| Does not format queries that are written on a single line.        |
+| `ignoreTagless`     | boolean |`true`| Does not format queries that are written without using `sql` tag. |
+| `startWithNewLine`  | boolean |`true`| Always start a sql template on a new line.                        |
+| `matchOuterIndentation`  | boolean |`true`| Indent the sql template from the same leven as enclosing code.    |
+| `extraIndentLevel`  | number  |1| add extra indent levels to the inline sql.   |
 
-The second option is an object with the [`pg-formatter` configuration](https://github.com/gajus/pg-formatter#configuration).
 
-<!-- assertions format -->
+
+The second option is an object with the [`sql-formatter` configuration](https://github.com/sql-formatter-org/sql-formatter#configuration-options).
+
+
 
 <a name="user-content-eslint-plugin-sql-rules-no-unsafe-query"></a>
 <a name="eslint-plugin-sql-rules-no-unsafe-query"></a>
@@ -136,5 +136,5 @@ The first option is an object with the following configuration.
 |---|---|---|---|
 |`allowLiteral`|boolean|`false`|Controls whether `sql` tag is required for template literals containing literal queries, i.e. template literals without expressions.|
 
-<!-- assertions noUnsafeQuery -->
+
 

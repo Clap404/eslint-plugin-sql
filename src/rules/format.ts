@@ -6,13 +6,15 @@ import isSqlQuery from '../utilities/isSqlQuery';
 const create = (context) => {
   const placeholderRule = context.settings?.sql?.placeholderRule;
 
-  const pluginOptions = context.options?.[0] || {};
+  const sqlFormatterOptions = context.options[1];
+  const pluginOptions = context.options?.[0];
 
-  const ignoreExpressions = pluginOptions.ignoreExpressions === true;
-  const ignoreInline = pluginOptions.ignoreInline !== false;
-  const ignoreTagless = pluginOptions.ignoreTagless !== false;
-  const startWithNewLine = pluginOptions.startWithNewLine !== false;
-  const matchOuterIndentation = pluginOptions.matchOuterIndentation !== false;
+  const ignoreExpressions = pluginOptions.ignoreExpressions;
+  const ignoreInline = pluginOptions.ignoreInline;
+  const ignoreTagless = pluginOptions.ignoreTagless;
+  const startWithNewLine = pluginOptions.startWithNewLine;
+  const matchOuterIndentation = pluginOptions.matchOuterIndentation;
+  const extraIndentLevel = pluginOptions.extraIndentLevel;
 
   return {
     TemplateLiteral(node) {
@@ -47,7 +49,7 @@ const create = (context) => {
         return;
       }
 
-      let formatted = format(literal, context.options[1]);
+      let formatted = format(literal, sqlFormatterOptions);
 
       if (matchOuterIndentation) {
         const sourceCode = context.getSourceCode();
@@ -55,19 +57,21 @@ const create = (context) => {
         const tagLine = sourceCode.lines[tagLoc.line - 1];
         const spaces = tagLine.match(/^ */)[0].length;
 
-        const formattedLines = formatted.split('\n');
-        formatted = formattedLines
-          .map((line) => {
-            return ' '.repeat(spaces) + line;
-          })
-          .join('\n');
+        const padding = ' '.repeat(spaces);
+        formatted = formatted.replace(/(^|\n)/g, '$1' + padding)
       }
 
-      // by default, sql-formatter trims the new line at the beginning of the query
+      if(extraIndentLevel) {
+        const padding = ' '.repeat(sqlFormatterOptions.tabWidth * extraIndentLevel)
+        formatted = formatted.replace(/(^|\n)/g, '$1' + padding)
+      }
+
       if (
         startWithNewLine
       ) {
         formatted = '\n' + formatted;
+      } else {
+        formatted = formatted.trim();
       }
 
       if (formatted !== literal) {
@@ -135,6 +139,10 @@ export = {
           matchOuterIndentation: {
             default: true,
             type: 'boolean',
+          },
+          extraIndentLevel: {
+            default: 1,
+            type: 'number',
           },
         },
         type: 'object',
