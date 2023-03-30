@@ -52,7 +52,7 @@ const create = (context) => {
                 isInline = true;
             }
             // clean trailing whitespaces at the end of a line in the middle of a query
-            formatted.replace(/\s+\n/g, '\n');
+            formatted = formatted.replace(/\s+\n/g, '\n');
             if (matchOuterIndentation && !isInline) {
                 const sourceCode = context.getSourceCode();
                 const tagLoc = sourceCode.getLocFromIndex(node.parent.tag.range[0]);
