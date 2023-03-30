@@ -11,6 +11,7 @@ const create = (context) => {
 
   const ignoreExpressions = pluginOptions.ignoreExpressions;
   const ignoreInline = pluginOptions.ignoreInline;
+  const preserveInline = pluginOptions.preserveInline;
   const ignoreTagless = pluginOptions.ignoreTagless;
   const startWithNewLine = pluginOptions.startWithNewLine;
   const matchOuterIndentation = pluginOptions.matchOuterIndentation;
@@ -45,13 +46,27 @@ const create = (context) => {
         return;
       }
 
-      if (ignoreInline && !literal.includes('\n')) {
-        return;
+      let wasInline = false;
+      if (!literal.includes('\n')) {
+        if(ignoreInline) {
+          return;
+        }
+        wasInline = true;
       }
 
       let formatted = format(literal, sqlFormatterOptions);
 
-      if (matchOuterIndentation) {
+      let isInline = false
+      if(wasInline && preserveInline) {
+        // replace and compress multiple spaces in the line
+        formatted = formatted.replace(/\s+/g, ' ')
+        isInline = true;
+      }
+
+      // clean trailing whitespaces at the end of a line in the middle of a query
+      formatted.replace(/\s+\n/g, '\n');
+
+      if (matchOuterIndentation && !isInline) {
         const sourceCode = context.getSourceCode();
         const tagLoc = sourceCode.getLocFromIndex(node.parent.tag.range[0]);
         const tagLine = sourceCode.lines[tagLoc.line - 1];
@@ -61,13 +76,13 @@ const create = (context) => {
         formatted = formatted.replace(/(^|\n)/g, '$1' + padding)
       }
 
-      if(extraIndentLevel) {
+      if(extraIndentLevel && !isInline) {
         const padding = ' '.repeat(sqlFormatterOptions.tabWidth * extraIndentLevel)
         formatted = formatted.replace(/(^|\n)/g, '$1' + padding)
       }
 
       if (
-        startWithNewLine
+        startWithNewLine && !isInline
       ) {
         formatted = '\n' + formatted;
       } else {
@@ -124,8 +139,12 @@ export = {
             default: false,
             type: 'boolean',
           },
-          ignoreInline: {
+          preserveInline: {
             default: true,
+            type: 'boolean',
+          },
+          ignoreInline: {
+            default: false,
             type: 'boolean',
           },
           startWithNewLine: {
