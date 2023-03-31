@@ -1,7 +1,4 @@
-import createDebug from 'debug';
 import isSqlQuery from '../utilities/isSqlQuery';
-
-const debug = createDebug('eslint-plugin-sql:rule:no-unsafe-query');
 
 const defaultOptions = {
   allowLiteral: false,
@@ -26,11 +23,7 @@ const create = (context) => {
         })
         .join('foo');
 
-      debug('input', literal);
-
       const recognizedAsQuery = isSqlQuery(literal, placeholderRule);
-
-      debug('recognized as a query', recognizedAsQuery);
 
       if (!recognizedAsQuery) {
         return;

@@ -2,7 +2,6 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-const astring_1 = require("astring");
 const sql_formatter_1 = require("sql-formatter");
 const isSqlQuery_1 = __importDefault(require("../utilities/isSqlQuery"));
 const create = (context) => {
@@ -78,7 +77,7 @@ const create = (context) => {
                         const expressionCount = node.expressions.length;
                         let index = 0;
                         while (index <= expressionCount - 1) {
-                            final = final.replace(magic, '${' + (0, astring_1.generate)(node.expressions[index]) + '}');
+                            final = final.replace(magic, '${' + node.expressions[index] + '}');
                             index++;
                         }
                         return fixer.replaceTextRange([

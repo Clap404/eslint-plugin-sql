@@ -2,9 +2,7 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-const debug_1 = __importDefault(require("debug"));
 const isSqlQuery_1 = __importDefault(require("../utilities/isSqlQuery"));
-const debug = (0, debug_1.default)('eslint-plugin-sql:rule:no-unsafe-query');
 const defaultOptions = {
     allowLiteral: false,
 };
@@ -23,9 +21,7 @@ const create = (context) => {
                 return quasi.value.raw;
             })
                 .join('foo');
-            debug('input', literal);
             const recognizedAsQuery = (0, isSqlQuery_1.default)(literal, placeholderRule);
-            debug('recognized as a query', recognizedAsQuery);
             if (!recognizedAsQuery) {
                 return;
             }

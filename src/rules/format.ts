@@ -1,4 +1,3 @@
-import { generate } from 'astring';
 import { format } from 'sql-formatter';
 
 import isSqlQuery from '../utilities/isSqlQuery';
@@ -100,7 +99,7 @@ const create = (context) => {
             while (index <= expressionCount - 1) {
               final = final.replace(
                 magic,
-                '${' + generate(node.expressions[index]) + '}',
+                '${' + node.expressions[index] + '}',
               );
 
               index++;

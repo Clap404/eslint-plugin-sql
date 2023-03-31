@@ -5,15 +5,11 @@
     "url": "http://github.com/clap404"
   },
   "dependencies": {
-    "astring": "^1.8.3",
-    "debug": "^4.3.4",
-    "lodash": "^4.17.21",
     "sql-formatter": "^12.0.5",
     "sql-parse": "^0.1.5"
   },
   "description": "SQL linting rules for ESLint.",
   "devDependencies": {
-    "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.9",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
@@ -21,7 +17,6 @@
     "eslint-import-resolver-typescript": "^3.5.3",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "mocha": "^10.1.0",
     "rimraf": "^4.0.7",
     "tsx": "^3.12.1",
     "typescript": "^4.9.3"
@@ -48,8 +43,7 @@
     "clean": "rimraf ./dist",
     "build": "tsc",
     "lint": "eslint ./src ./test && tsc --noEmit",
-    "lint:fix": "eslint --fix ./src ./test && tsc --noEmit",
-    "test": "mocha --require tsx test/**/*"
+    "lint:fix": "eslint --fix ./src ./test && tsc --noEmit"
   },
   "version": "0.0.3",
   "contributors": [
@@ -59,5 +53,5 @@
       "url": "http://gajus.com"
     }
   ],
-  "packageManager": "yarn@3.3.1"
+  "packageManager": "yarn@3.5.0"
 }
