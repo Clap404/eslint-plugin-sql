@@ -51,7 +51,7 @@
     "lint:fix": "eslint --fix ./src ./test && tsc --noEmit",
     "test": "mocha --require tsx test/**/*"
   },
-  "version": "0.0.3",
+  "version": "0.1.0",
   "contributors": [
     {
       "email": "gajus@gajus.com",
