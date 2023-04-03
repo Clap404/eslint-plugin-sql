@@ -30,7 +30,7 @@
     "sql"
   ],
   "license": "BSD-3-Clause",
-  "main": "./dist/src/index.js",
+  "main": "./dist/index.js",
   "name": "@clap404/eslint-plugin-sql",
   "peerDependencies": {
     "eslint": ">=8.1.0"
@@ -45,7 +45,7 @@
     "lint": "eslint ./src ./test && tsc --noEmit",
     "lint:fix": "eslint --fix ./src ./test && tsc --noEmit"
   },
-  "version": "0.0.3",
+  "version": "0.0.4",
   "contributors": [
     {
       "email": "gajus@gajus.com",
