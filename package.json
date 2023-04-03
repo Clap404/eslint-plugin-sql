@@ -45,7 +45,7 @@
     "lint": "eslint ./src ./test && tsc --noEmit",
     "lint:fix": "eslint --fix ./src ./test && tsc --noEmit"
   },
-  "version": "0.0.3",
+  "version": "0.0.4",
   "contributors": [
     {
       "email": "gajus@gajus.com",
