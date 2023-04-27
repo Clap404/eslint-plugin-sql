@@ -106,7 +106,7 @@ const create = (context) => {
               }
               // some tricky to lint templates can crash astring. log a warning and skip it in this case.
               catch (e) {
-                console.warn(`Astring failed to format template literals in ${context.getFileName()}`);
+                console.warn(`Astring failed to format template literals in ${context.getFilename()}`);
                 return;
               }
 
