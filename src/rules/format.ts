@@ -98,10 +98,17 @@ const create = (context) => {
             let index = 0;
 
             while (index <= expressionCount - 1) {
-              final = final.replace(
-                magic,
-                '${' + generate(node.expressions[index]) + '}',
-              );
+              try {
+                final = final.replace(
+                    magic,
+                    '${' + generate(node.expressions[index]) + '}',
+                );
+              }
+              // some tricky to lint templates can crash astring. log a warning and skip it in this case.
+              catch (e) {
+                console.warn(`Astring failed to format template literals at node ${JSON.stringify(node)}`);
+                return;
+              }
 
               index++;
             }
